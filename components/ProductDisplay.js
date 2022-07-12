@@ -56,7 +56,7 @@ app.component('product-display', {
   },
   methods: {
       addToCart() {
-          this.cart += 1
+          this.$emit('add-to-cart');
       },
       updateVariant(index) {
           this.selectedVariant = index
@@ -64,7 +64,7 @@ app.component('product-display', {
   },
   computed: {
       title() {
-          return this.brand + ' ' + this.product
+          return this.brand + ' ' + this.productName 
       },
       image() {
           return this.variants[this.selectedVariant].image
@@ -77,6 +77,9 @@ app.component('product-display', {
           return 'Free'
         }
         return 2.99
+      },
+      productName() {
+        return this.variants[this.selectedVariant].color + ' socks';
       }
   }
 })

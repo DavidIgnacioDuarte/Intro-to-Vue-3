@@ -5,5 +5,9 @@ const app = Vue.createApp({
             premium: true
         }
     },
-    methods: {}
+    methods: {
+        add_to_cart() {
+            this.cart++;
+        }
+    }
 })
