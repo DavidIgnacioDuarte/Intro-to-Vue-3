@@ -39,6 +39,15 @@ app.component('product-display', {
           v-on:click="addToCart">
           Add to Cart
         </button>
+
+        <button 
+          class="button" 
+          :class="{ disabledButton: !inCart }" 
+          :disabled="!inCart" 
+          v-on:click="removeFromCart">
+          Remove from Cart
+        </button>
+
       </div>
     </div>
   </div>`,
@@ -49,17 +58,24 @@ app.component('product-display', {
         selectedVariant: 0,
         details: ['50% cotton', '30% wool', '20% polyester'],
         variants: [
-          { id: 2234, color: 'green', image: './assets/images/socks_green.jpg', quantity: 50 },
-          { id: 2235, color: 'blue', image: './assets/images/socks_blue.jpg', quantity: 0 },
+          { id: 2234, color: 'green', image: './assets/images/socks_green.jpg', quantity: 3, inCart: 0 },
+          { id: 2235, color: 'blue', image: './assets/images/socks_blue.jpg', quantity: 1, inCart: 0},
         ]
     }
   },
   methods: {
       addToCart() {
-          this.$emit('add-to-cart');
+          this.$emit('add-to-cart', this.productName)
+          this.variants[this.selectedVariant].quantity--;
+          this.variants[this.selectedVariant].inCart++;
       },
       updateVariant(index) {
           this.selectedVariant = index
+      },
+      removeFromCart() {
+          this.$emit('remove-from-cart', this.productName);
+          this.variants[this.selectedVariant].quantity++;
+          this.variants[this.selectedVariant].inCart--;
       }
   },
   computed: {
@@ -70,7 +86,11 @@ app.component('product-display', {
           return this.variants[this.selectedVariant].image
       },
       inStock() {
-          return this.variants[this.selectedVariant].quantity
+          return this.variants[this.selectedVariant].quantity > 0
+      },
+      inCart() {
+          return this.variants[this.selectedVariant].inCart > 0;
+          //return app.containsInCart(this.variants[this.selectedVariant])
       },
       shipping() {
         if (this.premium) {
